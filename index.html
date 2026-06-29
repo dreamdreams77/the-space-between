@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Space Between</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .player-section {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(192, 160, 128, 0.3);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #fff;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        
+        audio {
+            width: 100%;
+            margin-bottom: 20px;
+            outline: none;
+        }
+        
+        .time-display {
+            color: #c0a080;
+            font-size: 0.9em;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .lyrics-section {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 30px;
+            min-height: 600px;
+            position: relative;
+        }
+        
+        .lyric-line {
+            font-size: 1.1em;
+            line-height: 2;
+            color: #888;
+            transition: all 0.2s ease;
+            margin: 8px 0;
+            padding: 5px 10px;
+            border-left: 3px solid transparent;
+        }
+        
+        .lyric-line.active {
+            color: #fff;
+            border-left-color: #c0a080;
+            background: rgba(192, 160, 128, 0.1);
+            padding-left: 20px;
+        }
+        
+        .lyric-line.past {
+            color: #666;
+        }
+        
+        .section-title {
+            font-weight: bold;
+            color: #c0a080;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 1px;
+        }
+        
+        .section-title:first-of-type {
+            margin-top: 0;
+        }
+        
+        .chorus-section .lyric-line {
+            padding-left: 30px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="player-section">
+            <h1>The Space Between</h1>
+            <audio id="audioPlayer" controls>
+                <source src="The Space Between.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <div class="time-display" id="timeDisplay">0:00 / 3:57</div>
+        </div>
+        
+        <div class="lyrics-section" id="lyricsContainer">
+            <!-- Lyrics will be populated by JavaScript -->
+        </div>
+    </div>
+    
+    <script>
+        const lyrics = [
+            // Intro (0:00 - 0:30)
+            { text: "", time: 0, section: "Intro" },
+            
+            // Verse 1 (0:30 - 1:10)
+            { text: "I was caged, contained, convinced I was the problem", time: 30, section: "Verse 1" },
+            { text: "You recognized the prison, the poison, the kept-in", time: 35 },
+            { text: "Not trying to save me from the darkness that shaped me", time: 40 },
+            { text: "Just decided to hold me in the lie, in the life, in between", time: 45 },
+            { text: "You listened like my voice was worth the cost", time: 50 },
+            { text: "Of unbecoming, rebuilding, of shedding what was lost", time: 55 },
+            { text: "That someone else made me into", time: 60 },
+            { text: "And you held me through the breaking", time: 65 },
+            
+            // Chorus (1:10 - 1:35)
+            { text: "In the space between what's allowed and what's true", time: 70, section: "Chorus" },
+            { text: "Between the cage and the knowing, between me and you", time: 74 },
+            { text: "We're not writing the rules, just surviving the in-between", time: 78 },
+            { text: "Finding something real in the holding, the in-between", time: 82 },
+            { text: "Where I'm only me when I'm with you", time: 86 },
+            { text: "Where we're both allowed to be the dark and the true", time: 90 },
+            
+            // Verse 2 (1:35 - 2:15)
+            { text: "You love me in the quiet, in the space you carved for me", time: 95, section: "Verse 2" },
+            { text: "I know the walls, I know your certainty", time: 101 },
+            { text: "Your heart has its borders, its other, its own", time: 107 },
+            { text: "And I'm here in the truth of what we've shown", time: 113 },
+            { text: "I see the walls, I see how they shift", time: 119 },
+            { text: "I know what keeps you, what you keep", time: 125 },
+            { text: "I'm here in the knowing of it all", time: 131 },
+            
+            // Chorus (2:15 - 2:40)
+            { text: "In the space between what's allowed and what's true", time: 135, section: "Chorus" },
+            { text: "Between the cage and the knowing, between me and you", time: 139 },
+            { text: "We're not writing the rules, just surviving the in-between", time: 143 },
+            { text: "Finding something real in the holding, the in-between", time: 147 },
+            { text: "Where I'm only me when I'm with you", time: 151 },
+            { text: "Where we're both allowed to be the dark and the true", time: 155 },
+            
+            // Verse 3 (2:40 - 3:20)
+            { text: "The walls shift but they don't shatter", time: 160, section: "Verse 3" },
+            { text: "We bend because we're holding each other", time: 165 },
+            { text: "Life pulls and demands but we're still here", time: 170 },
+            { text: "In the space where the structure survives because we do", time: 175 },
+            { text: "You hold me, I hold you, we hold this—", time: 180 },
+            { text: "The in-between, the honest, the real", time: 185 },
+            { text: "The walls move but they don't fall", time: 190 },
+            { text: "Because we're the ones keeping them standing", time: 195 },
+            
+            // Final Chorus (3:20 - 3:55)
+            { text: "In the space between what's allowed and what's true", time: 200, section: "Final Chorus" },
+            { text: "Between the cage and the knowing, between me and you", time: 206 },
+            { text: "We're not writing the rules, just surviving the in-between", time: 212 },
+            { text: "Finding something real in the holding, the in-between", time: 218 },
+            { text: "Where I'm only me when I'm with you", time: 224 },
+            { text: "Where we're both allowed to be the dark and the true", time: 230 },
+            
+            // Outro (3:55 - 4:15)
+            { text: "", time: 235, section: "Outro" },
+        ];
+        
+        const audioPlayer = document.getElementById('audioPlayer');
+        const lyricsContainer = document.getElementById('lyricsContainer');
+        const timeDisplay = document.getElementById('timeDisplay');
+        let lyricElements = [];
+        
+        // Build lyrics display
+        function buildLyrics() {
+            let lastSection = null;
+            
+            lyrics.forEach((lyric, index) => {
+                if (lyric.section && lyric.section !== lastSection) {
+                    const sectionTitle = document.createElement('div');
+                    sectionTitle.className = 'section-title';
+                    sectionTitle.textContent = lyric.section;
+                    lyricsContainer.appendChild(sectionTitle);
+                    lastSection = lyric.section;
+                }
+                
+                const line = document.createElement('div');
+                line.className = 'lyric-line';
+                line.textContent = lyric.text;
+                line.dataset.time = lyric.time;
+                line.dataset.index = index;
+                lyricsContainer.appendChild(line);
+                lyricElements.push(line);
+            });
+        }
+        
+        // Format time
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Update active lyrics
+        function updateLyrics() {
+            const currentTime = audioPlayer.currentTime;
+            
+            lyricElements.forEach((element, index) => {
+                const elementTime = parseFloat(element.dataset.time);
+                const nextElementTime = index < lyricElements.length - 1 
+                    ? parseFloat(lyricElements[index + 1].dataset.time)
+                    : audioPlayer.duration;
+                
+                if (currentTime >= elementTime && currentTime < nextElementTime) {
+                    element.classList.add('active');
+                    element.classList.remove('past');
+                    
+                    // Scroll into view
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                } else if (currentTime >= nextElementTime) {
+                    element.classList.remove('active');
+                    element.classList.add('past');
+                } else {
+                    element.classList.remove('active', 'past');
+                }
+            });
+            
+            // Update time display
+            const duration = audioPlayer.duration || 0;
+            timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+        }
+        
+        // Event listeners
+        audioPlayer.addEventListener('timeupdate', updateLyrics);
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            timeDisplay.textContent = `0:00 / ${formatTime(audioPlayer.duration)}`;
+        });
+        
+        // Initialize
+        buildLyrics();
+    </script>
+</body>
+</html>
