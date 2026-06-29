@@ -68,6 +68,7 @@
             padding: 30px;
             min-height: 600px;
             position: relative;
+            scroll-behavior: smooth;
         }
         
         .lyric-line {
@@ -238,8 +239,8 @@
                     element.classList.add('active');
                     element.classList.remove('past');
                     
-                    // Scroll into view
-                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    // Scroll into view smoothly - only when needed
+                    element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 } else if (currentTime >= nextElementTime) {
                     element.classList.remove('active');
                     element.classList.add('past');
